@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: spring-boot-helloworld
+  name: spring-boot-helloworld-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spring-boot-helloworld
+  template:
+    metadata:
+      labels:
+        app: spring-boot-helloworld
+    spec:
+      containers:
+      - name: spring-boot-helloworld
+        image: ap-chuncheon-1.ocir.io/apackrsct01/spring-boot-helloworld:1.0
+      imagePullSecrets:
+      - name: ocir-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: spring-boot-helloworld-service
+spec:
+  selector:
+    app: spring-boot-helloworld
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: LoadBalancer
+
