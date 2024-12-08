@@ -1,4 +1,1 @@
-/etc/ipsec.d/oci-ipsec.conf
-/etc/ipsec.d/oci-ipsec.secrets
-
-두 파일 참고용 입니다.
+OCI OKE 실습 (2024.12.19) 참고용 파일
