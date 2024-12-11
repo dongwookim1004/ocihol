@@ -1,0 +1,9 @@
+Allow group Administrators to manage instance-family in compartment oci-handson
+Allow group Administrators to use subnets in compartment oci-handson
+Allow group Administrators to manage virtual-network-family in compartment oci-handson
+Allow group Administrators to inspect compartments in compartment oci-handson
+Allow group Administrators to use vnics in compartment oci-handson
+Allow group Administrators to use network-security-groups in compartment oci-handson
+Allow group Administrators to use private-ips in compartment oci-handson
+Allow group Administrators to manage public-ips in compartment oci-handson
+Allow group Administrators to manage cluster-family in compartment oci-handson
