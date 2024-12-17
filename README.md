@@ -1,1 +1,126 @@
 OCI OKE 실습 (2024.12.19) 참고용 파일
+
+# Spring Boot App Port 변경 (필요시)
+application.properties 파일에 다음 추가
+server.port=8090
+
+
+# Spring Boot 소스 빌드 ( ~/ocihandson 폴더에서 )
+./mvnw clean package
+
+
+# Spring Boot 소스 실행 ( ~/oci-handson 폴더에서 )
+java -jar target/ocihandson-0.0.1-SNAPSHOT.jar
+
+
+# Spring Boot 호출
+curl localhost:8080; echo
+
+
+# Docker 빌드
+docker build -t spring-boot-helloworld:1.0 .
+
+
+# Docker Image 조회
+docker images
+
+
+# OCI Region Identifier 확인
+echo $OCI_REGION
+
+
+# Object storage namespace 확인
+oci os ns get
+
+
+# OCIR 로그인
+docker login <Region Endpoints> -u <Namespace>/<User>
+docker login ap-chuncheon-1.ocir.io -u apackrsct01/OracleIdentityCloudService/seongil.jeong@oracle.com
+
+
+# 컨테이너 이미지 TAG
+docker tag spring-boot-helloworld:1.0 ap-chuncheon-1.ocir.io/apackrsct01/spring-boot-helloworld:1.0
+
+
+# 컨테이너 이미지 PUSH
+docker push $OCI_REGION.ocir.io/$TENANCY_NAMESPACE/oci-hol-xx/spring-boot-greeting:1.0
+docker push ap-chuncheon-1.ocir.io/apackrsct01/spring-boot-helloworld:1.0
+
+
+
+# OKE Secret 생성 명령어
+kubectl create secret generic ocir-secret \
+--from-file=.dockerconfigjson=$HOME/.docker/config.json \
+--type=kubernetes.io/dockerconfigjson
+
+
+# YAML 파일을 이용해 OKE 에 배포
+kubectl apply -f spring-boot-helloworld.yaml
+
+
+# OKE 배포된 모든 자원을 확인
+kubectl get all
+
+
+# OKE Service 조회
+kubectl get svc
+
+
+# OKE StorageClass 확인
+kubectl get storageclass
+
+
+# BV PVC 생성
+kubectl apply -f csi-bvs-pvc.yaml
+
+
+# BV Pod 생성
+kubectl apply -f nginx-pvc.yaml
+
+
+# 컨테이너 접속하기
+kubectl exec -it nginx -- bash
+
+
+# BV PVC 컨테이너 내 파일 변경
+touch /usr/share/nginx/html/index.html
+ls /usr/share/nginx/html/
+
+
+# BV Pod 삭제
+kubectl delete pod nginx
+
+
+# FSS PV 생성
+<FileSystemOCID>:<MountTargetIP>:<Path>
+ocid1.filesystem.oc1.ap_chuncheon_1.aaaaaaaaaajytr4qpfxhsllqojxwiotboawwg2dvnzrwqzlpnywtcllbmqwtcaaa:10.0.10.17:/oke-fss
+
+
+# FSS PV, PVC 생성
+kubectl apply -f fss-pv.yaml
+kubectl apply -f fss-pvc.yaml
+
+
+# POS 조회, 컨테이너 접속
+kubectl get pod
+kubectl exec -it spring-boot-helloworld-deployment-5457f98cfd-jj5t4 -- bash
+touch /usr/share/spring/index.html
+ls /usr/share/spring/
+
+
+# OKE Dashboard Pod 조회
+kubectl get pod -n kube-system
+
+
+# ServiceAccount , Secret Yaml 파일 적용
+kubectl apply -f oke-admin-service-account.yaml
+kubectl apply -f oke-admin-sa-token.yaml
+
+
+# Kubernetes dashboard Service 변경
+kubectl edit svc kubernetes-dashboard -n kube-system
+spec.type 값 ClusterIP 에서 LoadBalancer
+
+
+# Kubernetes dashboard Token 확인
+kubectl describe secrets oke-admin-sa-token -n kube-system
