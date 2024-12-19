@@ -39,7 +39,7 @@ oci os ns get
 
 # OCIR 로그인
 docker login <Region Endpoints> -u <Namespace>/<User>
-docker login ap-chuncheon-1.ocir.io -u apackrsct01/OracleIdentityCloudService/seongil.jeong@oracle.com
+docker login ap-chuncheon-1.ocir.io -u apackrsct01/OracleIdentityCloudService/jeong@oracle.com
 
 
 # 컨테이너 이미지 TAG
